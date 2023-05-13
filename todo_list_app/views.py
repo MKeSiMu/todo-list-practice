@@ -7,6 +7,7 @@ from todo_list_app.models import Task, Tag
 
 class TaskListView(generic.ListView):
     model = Task
+    queryset = Task.objects.prefetch_related("tag")
     context_object_name = "task_list"
     template_name = "todo_list_app/index.html"
     paginate_by = 5

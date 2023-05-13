@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h1>
+    TODO List
+    <a href="{% url 'todo_list_app:task-create' %}" class="btn btn-primary link-to-page">
+      Add+
+    </a>
+  </h1>
+
+  {% if task_list%}
+  <div>
+    {% for task in task_list %}
+    <p class="no-padding" style="list-style: none">
+      <h4>{{ task.content }}</h4>
+      Status:
+      {% if task.task_status %}
+        <span style="color: green">{{ task.get_task_status_display }}</span>
+        <a href="{% url 'todo_list_app:task-status' pk=task.id %}" class="btn btn-secondary btn-sm link-to-page float-right">
+          Undo
+        </a>
+      {% else %}
+        <span style="color: red">{{ task.get_task_status_display }}</span>
+        <a href="{% url 'todo_list_app:task-status' pk=task.id %}" class="btn btn-success btn-sm link-to-page float-right">
+          Complete
+        </a>
+      {% endif %}
+      <br>
+      Created: {{ task.created_datetime }}
+      <br>
+      {% if task.deadline_datetime %}<span style="color: darkred">Deadline: {{ task.deadline_datetime }}</span>
+        <br>
+      {% endif %}
+      Tags: {% for tag in task.tag.all %}{{ tag }} {% endfor %}
+      <a href="{% url 'todo_list_app:task-update' pk=task.id %}" class="btn btn-outline-primary btn-sm link-to-page">
+        Update
+      </a>
+      <a href="{% url 'todo_list_app:task-delete' pk=task.id %}" class="btn btn-outline-danger btn-sm link-to-page">
+        Delete
+      </a>
+      <hr>
+    </p>
+    {% endfor %}
+  </div>
+  {% else %}
+  No any task!
+  {% endif %}
+{% endblock %}

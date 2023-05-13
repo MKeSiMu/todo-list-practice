@@ -2,7 +2,7 @@ from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views import generic
 
-from todo_list_app.models import Task
+from todo_list_app.models import Task, Tag
 
 
 class TaskListView(generic.ListView):
@@ -38,3 +38,27 @@ def task_complete_or_undo(request, pk):
         task.task_status = True
         task.save()
     return redirect("/")
+
+
+class TagListView(generic.ListView):
+    model = Tag
+    context_object_name = "tag_name_list"
+    template_name = "todo_list_app/tag_list.html"
+    paginate_by = 10
+
+
+class TagCreateView(generic.CreateView):
+    model = Tag
+    fields = "__all__"
+    success_url = reverse_lazy("todo_list_app:tag-list")
+
+
+class TagUpdateView(generic.UpdateView):
+    model = Tag
+    fields = "__all__"
+    success_url = reverse_lazy("todo_list_app:tag-list")
+
+
+class TagDeleteView(generic.DeleteView):
+    model = Tag
+    success_url = reverse_lazy("todo_list_app:tag-list")

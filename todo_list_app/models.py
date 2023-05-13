@@ -19,7 +19,10 @@ class Task(models.Model):
         blank=True,
         help_text="Enter date and time in '2023-05-13 06:31' format"
     )
-    task_status = models.BooleanField(default=False, choices=TASK_STATUS_CHOICES)
+    task_status = models.BooleanField(
+        default=False,
+        choices=TASK_STATUS_CHOICES
+    )
     tag = models.ManyToManyField(Tag, related_name="tasks")
 
     class Meta:

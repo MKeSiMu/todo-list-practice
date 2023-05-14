@@ -13,21 +13,35 @@
     {% for task in task_list %}
     <p class="no-padding" style="list-style: none">
       <h4>{{ task.content }}</h4>
-      Status:
       {% if task.is_completed %}
-        <form method="post" action="{% url 'todo_list_app:task-status' task.id %}">
-          {% csrf_token %}
-          <input class="btn btn-secondary btn-sm link-to-page float-right" type="submit" value="Undo">
-        </form>
-        <span style="color: green">{{ task.get_is_completed_display }}</span>
+        <div class="container">
+          <div class="row">
+            <div class="col-">
+              Status: <span style="color: green">{{ task.get_is_completed_display }}</span>
+            </div>
+            <div class="col-sm" style="height: 26px">
+              <form method="post" action="{% url 'todo_list_app:task-status' task.id %}">
+                {% csrf_token %}
+                <input class="btn btn-secondary btn-sm link-to-page float-right" type="submit" value="Undo">
+              </form>
+            </div>
+          </div>
+        </div>
       {% else %}
-        <form method="post" action="{% url 'todo_list_app:task-status' task.id %}">
-          {% csrf_token %}
-          <input class="btn btn-success btn-sm link-to-page float-right" type="submit" value="Complete">
-        </form>
-        <span style="color: red">{{ task.get_is_completed_display }}</span>
+        <div class="container">
+          <div class="row">
+            <div class="col-">
+              Status: <span style="color: red">{{ task.get_is_completed_display }}</span>
+            </div>
+            <div class="col-sm" style="height: 26px">
+              <form method="post" action="{% url 'todo_list_app:task-status' task.id %}">
+                {% csrf_token %}
+                <input class="btn btn-success btn-sm link-to-page float-right" type="submit" value="Complete">
+              </form>
+            </div>
+          </div>
+        </div>
       {% endif %}
-      <br>
       Created: {{ task.created }}
       <br>
       {% if task.deadline %}<span style="color: darkred">Deadline: {{ task.deadline }}</span>

@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h1>
+    TODO List
+    <a href="{% url 'todo_list_app:task-create' %}" class="btn btn-primary link-to-page">
+      Add+
+    </a>
+  </h1>
+
+  {% if task_list%}
+  <div>
+    {% for task in task_list %}
+    <p class="no-padding" style="list-style: none">
+      <h4>{{ task.content }}</h4>
+      {% if task.is_completed %}
+        <div class="container">
+          <div class="row">
+            <div class="col-">
+              Status: <span style="color: green">{{ task.get_is_completed_display }}</span>
+            </div>
+            <div class="col-sm" style="height: 26px">
+              <form method="post" action="{% url 'todo_list_app:task-status' task.id %}">
+                {% csrf_token %}
+                <input class="btn btn-secondary btn-sm link-to-page float-right" type="submit" value="Undo">
+              </form>
+            </div>
+          </div>
+        </div>
+      {% else %}
+        <div class="container">
+          <div class="row">
+            <div class="col-">
+              Status: <span style="color: red">{{ task.get_is_completed_display }}</span>
+            </div>
+            <div class="col-sm" style="height: 26px">
+              <form method="post" action="{% url 'todo_list_app:task-status' task.id %}">
+                {% csrf_token %}
+                <input class="btn btn-success btn-sm link-to-page float-right" type="submit" value="Complete">
+              </form>
+            </div>
+          </div>
+        </div>
+      {% endif %}
+      Created: {{ task.created }}
+      <br>
+      {% if task.deadline %}<span style="color: darkred">Deadline: {{ task.deadline }}</span>
+        <br>
+      {% endif %}
+      Tags: {% for tag in task.tags.all %}{{ tag }} {% endfor %}
+      <a href="{% url 'todo_list_app:task-update' pk=task.id %}" class="btn btn-outline-primary btn-sm link-to-page">
+        Update
+      </a>
+      <a href="{% url 'todo_list_app:task-delete' pk=task.id %}" class="btn btn-outline-danger btn-sm link-to-page">
+        Delete
+      </a>
+      <hr>
+    </p>
+    {% endfor %}
+  </div>
+  {% else %}
+  No any task!
+  {% endif %}
+{% endblock %}

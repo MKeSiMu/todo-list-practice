@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h1>
+    Tags
+    <a href="{% url 'todo_list_app:tag-create' %}" class="btn btn-primary link-to-page float-right">
+      Add+
+    </a>
+  </h1>
+  {% if tag_name_list %}
+  <table class="table">
+      <tr>
+        <th>Name</th>
+        <th>Update</th>
+        <th>Delete</th>
+      </tr>
+    {% for tag in tag_name_list%}
+      <tr>
+      <td>
+        {{ tag }}
+      </td>
+      <td>
+        <a href="{% url 'todo_list_app:tag-update' pk=tag.id %}">
+          Update
+        </a>
+      </td>
+      <td>
+        <a style="color: red"
+           href="{% url 'todo_list_app:tag-delete' pk=tag.id %}">
+          Delete
+        </a>
+      </td>
+      </tr>
+      {% endfor %}
+    </table>
+   {% else %}
+     <p>No any tags!</p>
+  {% endif %}
+{% endblock %}

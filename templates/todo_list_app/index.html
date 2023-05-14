@@ -14,24 +14,26 @@
     <p class="no-padding" style="list-style: none">
       <h4>{{ task.content }}</h4>
       Status:
-      {% if task.task_status %}
-        <span style="color: green">{{ task.get_task_status_display }}</span>
-        <a href="{% url 'todo_list_app:task-status' pk=task.id %}" class="btn btn-secondary btn-sm link-to-page float-right">
-          Undo
-        </a>
+      {% if task.is_completed %}
+        <form method="post" action="{% url 'todo_list_app:task-status' task.id %}">
+          {% csrf_token %}
+          <input class="btn btn-secondary btn-sm link-to-page float-right" type="submit" value="Undo">
+        </form>
+        <span style="color: green">{{ task.get_is_completed_display }}</span>
       {% else %}
-        <span style="color: red">{{ task.get_task_status_display }}</span>
-        <a href="{% url 'todo_list_app:task-status' pk=task.id %}" class="btn btn-success btn-sm link-to-page float-right">
-          Complete
-        </a>
+        <form method="post" action="{% url 'todo_list_app:task-status' task.id %}">
+          {% csrf_token %}
+          <input class="btn btn-success btn-sm link-to-page float-right" type="submit" value="Complete">
+        </form>
+        <span style="color: red">{{ task.get_is_completed_display }}</span>
       {% endif %}
       <br>
-      Created: {{ task.created_datetime }}
+      Created: {{ task.created }}
       <br>
-      {% if task.deadline_datetime %}<span style="color: darkred">Deadline: {{ task.deadline_datetime }}</span>
+      {% if task.deadline %}<span style="color: darkred">Deadline: {{ task.deadline }}</span>
         <br>
       {% endif %}
-      Tags: {% for tag in task.tag.all %}{{ tag }} {% endfor %}
+      Tags: {% for tag in task.tags.all %}{{ tag }} {% endfor %}
       <a href="{% url 'todo_list_app:task-update' pk=task.id %}" class="btn btn-outline-primary btn-sm link-to-page">
         Update
       </a>

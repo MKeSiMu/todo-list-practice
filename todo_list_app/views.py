@@ -1,13 +1,13 @@
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
-from django.views import generic
+from django.views import generic, View
 
 from todo_list_app.models import Task, Tag
 
 
 class TaskListView(generic.ListView):
     model = Task
-    queryset = Task.objects.prefetch_related("tag")
+    queryset = Task.objects.prefetch_related("tags")
     context_object_name = "task_list"
     template_name = "todo_list_app/index.html"
     paginate_by = 5
@@ -30,15 +30,13 @@ class TaskDeleteView(generic.DeleteView):
     success_url = reverse_lazy("todo_list_app:index")
 
 
-def task_complete_or_undo(request, pk):
-    task = Task.objects.get(id=pk)
-    if task.task_status:
-        task.task_status = False
+class TaskStatusUpdateView(View):
+    @staticmethod
+    def post(request, pk):
+        task = Task.objects.get(id=pk)
+        task.is_completed = not task.is_completed
         task.save()
-    else:
-        task.task_status = True
-        task.save()
-    return redirect("/")
+        return redirect("todo_list_app:index")
 
 
 class TagListView(generic.ListView):
